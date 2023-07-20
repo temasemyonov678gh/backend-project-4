@@ -1,6 +1,6 @@
 test:
 	npx jest test
-isntall:
+install:
 	npm ci
 link:
 	npm link

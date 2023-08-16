@@ -1,7 +1,7 @@
-import nock from 'nock';
 import fsp from 'fs/promises';
 import path from 'node:path';
 import os from 'node:os';
+import nock from 'nock';
 import pageLoader from '../src/index.js';
 import { getFilename } from '../src/getters.js';
 

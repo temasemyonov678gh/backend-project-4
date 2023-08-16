@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { program } from 'commander';
 import process from 'node:process';
+import { program } from 'commander';
 import pageLoader from '../src/index.js';
 
 program

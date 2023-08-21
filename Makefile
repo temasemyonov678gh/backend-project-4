@@ -1,5 +1,7 @@
 test:
 	npx jest test
+test-coverage:
+	npx jest test --coverage
 install:
 	npm ci
 link:

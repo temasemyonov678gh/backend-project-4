@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const getResponse = (url) => axios.get(url);
+const getResponseHTML = (url) => axios.get(url);
+const getResponseImg = (url) => axios.get(url, { responseType: 'arraybuffer' });
 const getData = (response) => response.data;
 
-export { getResponse, getData };
+export { getResponseHTML, getData, getResponseImg };

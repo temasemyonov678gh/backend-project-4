@@ -1,5 +1,7 @@
 import fsp from 'fs/promises';
+import path from 'path';
 import cheerio from 'cheerio';
+import { getData } from './pageDownloader';
 
 const createFile = async (filepath, data) => {
   try {
@@ -19,11 +21,19 @@ const createDir = async (dirpath) => {
   }
 };
 
-const modifyHTML = async (HTMLfilepath, inputFilepath, type) => {
+const createFiles = (dirpath, arrFilenames, arrResponses) => arrFilenames
+  .map(([filename], index) => {
+    const normFilepath = path.join(dirpath, filename);
+    const data = getData(arrResponses[index]);
+    return createFile(normFilepath, data);
+  });
+
+const modifyHTML = async (HTMLfilepath, hrefEl, srcEl) => {
   try {
     const html = await fsp.readFile(HTMLfilepath, 'utf-8');
     const $ = cheerio.load(html);
-    $(type).attr('src', inputFilepath);
+    hrefEl.map(([filepath, i]) => $('link').eq(i).attr('href', filepath));
+    srcEl.map(([filepath, i]) => $('script, img').eq(i).attr('src', filepath));
     const modifedHTML = $.html();
     fsp.writeFile(HTMLfilepath, modifedHTML, 'utf-8');
   } catch (error) {
@@ -35,5 +45,6 @@ const modifyHTML = async (HTMLfilepath, inputFilepath, type) => {
 export {
   createFile,
   createDir,
+  createFiles,
   modifyHTML,
 };

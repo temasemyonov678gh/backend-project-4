@@ -1,40 +1,52 @@
 import {
   getNormname,
   getFullPath,
-  getImagePath,
   getReadingHTML,
-  getExt,
+  getResourcesPathes,
+  getFilteredAndRenamedLinks,
+  getNormNamesOfLinks,
+  getFilepathes,
 } from './getters.js';
-import { createFile, createDir, modifyHTML } from './creater.js';
-import { getResponseHTML, getData, getResponseImg } from './pageDownloader.js';
 
-export default async (userpath, url) => {
-  const getName = (type) => getNormname(url, type);
+import {
+  createFile,
+  createDir,
+  modifyHTML,
+  createFiles,
+} from './creater.js';
+
+import {
+  getResponse,
+  getData,
+  getResponsesOfLinks,
+} from './pageDownloader.js';
+
+export default async (userpath, link) => {
+  const getName = (type) => getNormname(link, type);
   const getPath = (name) => getFullPath(userpath, name);
 
-  const HTMLfilename = getName('html');
+  const url = new URL(link);
+  const originURL = url.origin;
+
+  const htmlRes = await getResponse(url);
+  const html = getData(htmlRes);
   const dirname = getName('dir');
-  const HTMLpath = getPath(HTMLfilename);
   const dirpath = getPath(dirname);
-
-  const page = await getResponseHTML(url);
-  const data = getData(page);
-  await createFile(HTMLpath, data);
   await createDir(dirpath);
-
-  const makeURL = new URL(url);
-  const originURL = makeURL.origin;
-
+  const HTMLname = getName('html');
+  const HTMLpath = getPath(HTMLname);
+  await createFile(HTMLpath, html);
   const readedHTML = await getReadingHTML(HTMLpath);
-  const imgPath = getImagePath(readedHTML);
-  const imgName = getNormname(`${originURL}${imgPath}`, getExt(imgPath));
-  const imgInDirPath = getFullPath(dirpath, imgName);
 
-  const pngResponse = await getResponseImg(`${originURL}${imgPath}`);
-  const pngData = getData(pngResponse);
-  await createFile(imgInDirPath, pngData);
+  const links = getResourcesPathes(readedHTML);
+  const filteredLinks = getFilteredAndRenamedLinks(originURL, links);
+  const responsesOfLinks = await Promise.all(getResponsesOfLinks(filteredLinks));
+  const namesOfLinks = getNormNamesOfLinks(filteredLinks);
+  const arrFilepathes = getFilepathes(namesOfLinks, dirname);
+  const { hrefEl, srcEl } = arrFilepathes;
+  await Promise.all(createFiles(dirpath, Object.values(namesOfLinks).flat(), responsesOfLinks));
 
-  await modifyHTML(HTMLpath, `${dirname}/${imgName}`, 'img');
+  await modifyHTML(HTMLpath, hrefEl, srcEl);
 
-  console.log(HTMLfilename);
+  console.log(`${dirname}/${HTMLname}`);
 };

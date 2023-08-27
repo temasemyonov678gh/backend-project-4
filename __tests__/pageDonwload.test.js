@@ -18,7 +18,6 @@ let expectedAfterHTML;
 let expectedPNG;
 
 let receivedHTML;
-let receivedPNG;
 
 const url = 'https://ru.hexlet.io';
 const PNGurl = 'https://ru.hexlet.io/assets/professions/nodejs.png';
@@ -31,7 +30,7 @@ beforeAll(async () => {
   const createpath = (link, type) => path.join(tempDir, getNormname(link, type));
   HTMLfilepath = createpath(`${url}/courses`, 'html');
   dirpath = createpath(`${url}/courses`, 'dir');
-  PNGfilepath = path.join(dirpath, getNormname(PNGurl, 'png'));
+  PNGfilepath = path.join(dirpath, getNormname(PNGurl));
 
   // ожидаемые файлы после работы программы
   const readFile = async (filepath) => fsp.readFile(filepath, 'utf-8');
@@ -40,12 +39,21 @@ beforeAll(async () => {
   expectedPNG = await readFile('./__fixtures__/nodejs.png');
 
   nock(url)
+    .persist()
     .get('/courses')
     .reply(200, expectedBeforeHTML);
 
   nock(url)
     .get('/assets/professions/nodejs.png')
     .reply(200, expectedPNG);
+
+  nock(url)
+    .get('/assets/application.css')
+    .reply(200, 'application.css');
+
+  nock(url)
+    .get('/packs/js/runtime.js')
+    .reply(200, 'runtime.js');
 
   await pageLoader(tempDir, `${url}/courses`);
 
@@ -74,7 +82,7 @@ describe('test page-loader program', () => {
   });
 
   test('img is correct', async () => {
-    receivedPNG = await fsp.readFile(PNGfilepath, 'utf-8');
+    const receivedPNG = await fsp.readFile(PNGfilepath, 'utf-8');
     expect(receivedPNG).toEqual(expectedPNG);
   });
 });

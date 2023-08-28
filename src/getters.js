@@ -1,4 +1,5 @@
 import path from 'path';
+import process from 'process';
 import fsp from 'fs/promises';
 import cheerio from 'cheerio';
 
@@ -34,6 +35,7 @@ const getReadingHTML = async (pathToHTML) => {
     return html;
   } catch (error) {
     console.error('Ошибка при попытке прочитать HTML-файл');
+    process.exit();
     throw new Error(error);
   }
 };

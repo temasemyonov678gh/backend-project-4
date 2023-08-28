@@ -1,4 +1,7 @@
 import axios from 'axios';
+import debug from 'axios-debug-log';
+
+debug.addLogger(axios);
 
 export const getResponse = (link) => axios.get(link);
 export const getResponsesOfLinks = (links) => {

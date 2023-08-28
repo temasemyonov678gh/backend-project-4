@@ -1,5 +1,7 @@
 test:
 	npx jest test
+test-axios-debug:
+	DEBUG=axios npx jest test
 test-coverage:
 	npx jest test --coverage
 install:

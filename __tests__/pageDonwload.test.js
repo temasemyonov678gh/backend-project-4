@@ -58,7 +58,7 @@ beforeAll(async () => {
     .get('/packs/js/runtime.js')
     .reply(200, 'runtime.js');
 
-  await pageLoader(tempDir, `${url}/courses`);
+  await pageLoader(`${url}/courses`, tempDir);
 
   // полученные файлы
   receivedHTML = await fsp.readFile(HTMLfilepath, 'utf-8');

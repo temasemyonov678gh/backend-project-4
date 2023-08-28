@@ -33,7 +33,7 @@ const getReadingHTML = async (pathToHTML) => {
     const html = await fsp.readFile(pathToHTML, 'utf-8');
     return html;
   } catch (error) {
-    console.error(error);
+    console.error('Ошибка при попытке прочитать HTML-файл');
     throw new Error(error);
   }
 };

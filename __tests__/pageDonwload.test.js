@@ -44,14 +44,17 @@ beforeAll(async () => {
     .reply(200, expectedBeforeHTML);
 
   nock(url)
+    .persist()
     .get('/assets/professions/nodejs.png')
     .reply(200, expectedPNG);
 
   nock(url)
+    .persist()
     .get('/assets/application.css')
     .reply(200, 'application.css');
 
   nock(url)
+    .persist()
     .get('/packs/js/runtime.js')
     .reply(200, 'runtime.js');
 

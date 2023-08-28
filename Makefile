@@ -2,6 +2,8 @@ test:
 	npx jest test
 test-axios-debug:
 	DEBUG=axios npx jest test
+test-nock-debug:
+	DEBUG=nock.* npx jest test
 test-debug:
 	DEBUG=page-loader npx jest test
 test-coverage:

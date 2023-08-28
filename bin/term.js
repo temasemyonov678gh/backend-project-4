@@ -12,7 +12,7 @@ program
   .option('-o, --output [dir]', 'output dir', process.cwd())
   .action((url) => {
     const options = program.opts();
-    pageLoader(options.output, url);
+    pageLoader(url, options.output);
   });
 
 program.parse();

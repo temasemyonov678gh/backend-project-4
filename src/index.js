@@ -25,7 +25,7 @@ import {
 
 const log = debug('page-loader');
 
-export default async (userpath, link) => {
+export default async (link, userpath) => {
   log(`program starts. url: ${link}, path to download: ${userpath}`);
   const getName = (type) => getNormname(link, type);
   const getPath = (name) => getFullPath(userpath, name);
